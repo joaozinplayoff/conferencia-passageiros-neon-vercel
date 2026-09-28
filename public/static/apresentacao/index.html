@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conferência de Passageiros por Reconhecimento Facial — Apresentação</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    background: #0f172a;
+    color: #f1f5f9;
+    overflow: hidden;
+  }
+  #deck {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4vw 6vw;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    background: radial-gradient(circle at 15% 15%, rgba(245,158,11,0.08), transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(16,185,129,0.08), transparent 45%),
+                #0f172a;
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    z-index: 10;
+  }
+  .slide-number {
+    position: absolute;
+    bottom: 22px;
+    right: 28px;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .brand-tag {
+    position: absolute;
+    top: 22px;
+    left: 28px;
+    font-size: 0.7rem;
+    color: #f59e0b;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card {
+    background: rgba(30,41,59,0.7);
+    border: 1px solid rgba(148,163,184,0.15);
+    border-radius: 1.1rem;
+    backdrop-filter: blur(6px);
+  }
+  .accent-amber { color: #f59e0b; }
+  .accent-green { color: #10b981; }
+  .accent-red { color: #ef4444; }
+  .accent-blue { color: #38bdf8; }
+  .bg-amber-dot { background: #f59e0b; }
+  .bg-green-dot { background: #10b981; }
+
+  #nav-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 50;
+    background: rgba(15,23,42,0.85);
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.2);
+  }
+  .nav-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(148,163,184,0.12);
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+  }
+  .nav-btn:hover { background: rgba(245,158,11,0.25); color: #f59e0b; }
+  .dots { display: flex; gap: 6px; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(148,163,184,0.35);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .dot.active { background: #f59e0b; width: 20px; border-radius: 4px; }
+
+  .fade-up {
+    animation: fadeUp 0.6s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .delay-1 { animation-delay: .08s; }
+  .delay-2 { animation-delay: .16s; }
+  .delay-3 { animation-delay: .24s; }
+  .delay-4 { animation-delay: .32s; }
+  .delay-5 { animation-delay: .40s; }
+
+  .step-line {
+    position: absolute;
+    top: 34px;
+    left: 34px;
+    right: 34px;
+    height: 2px;
+    background: rgba(148,163,184,0.15);
+  }
+  .print-hint { display: none; }
+  @media print {
+    #nav-controls, .brand-tag { display: none !important; }
+    .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; height: 100vh; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- SLIDE 1: CAPA -->
+  <section class="slide active" data-index="0">
+    <span class="brand-tag"><i class="fas fa-bus"></i> Protótipo · Transporte Rodoviário</span>
+    <div class="flex flex-col items-start justify-center h-full max-w-4xl">
+      <div class="fade-up flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center">
+          <i class="fas fa-user-check text-3xl accent-amber"></i>
+        </div>
+        <div class="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center">
+          <i class="fas fa-microphone-lines text-3xl accent-green"></i>
+        </div>
+        <div class="w-16 h-16 rounded-2xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center">
+          <i class="fas fa-bus text-3xl accent-blue"></i>
+        </div>
+      </div>
+      <h1 class="fade-up delay-1 text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+        Conferência de Passageiros<br/><span class="accent-amber">por Reconhecimento Facial</span>
+      </h1>
+      <p class="fade-up delay-2 text-xl text-slate-300 max-w-2xl">
+        Reconhecimento facial e voz para conferir passageiros em viagens rodoviárias — sem tirar o motorista dos olhos da estrada.
+      </p>
+      <div class="fade-up delay-3 mt-10 flex items-center gap-3 text-sm text-slate-400">
+        <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700">Protótipo funcional</span>
+        <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700">Hono + Cloudflare</span>
+        <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700">100% no navegador</span>
+      </div>
+    </div>
+    <div class="slide-number">01 / 11</div>
+  </section>
+
+  <!-- SLIDE 2: O PROBLEMA -->
+  <section class="slide" data-index="1">
+    <span class="brand-tag"><i class="fas fa-triangle-exclamation"></i> O Problema</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-3">Conferir passageiros manualmente é <span class="accent-red">lento e arriscado</span></h2>
+      <p class="fade-up delay-1 text-slate-300 text-lg mb-10 max-w-3xl">
+        Em viagens rodoviárias, o motorista precisa garantir que todos embarcaram — e principalmente, que todos voltaram após cada parada (postos, restaurantes, banheiros).
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="card p-6 fade-up delay-2">
+          <i class="fas fa-user-slash text-3xl accent-red mb-4"></i>
+          <h3 class="font-bold text-lg mb-2">Passageiro esquecido</h3>
+          <p class="text-slate-400 text-sm">Risco real de deixar alguém para trás numa parada — problema grave e recorrente no setor.</p>
+        </div>
+        <div class="card p-6 fade-up delay-3">
+          <i class="fas fa-clock text-3xl accent-amber mb-4"></i>
+          <h3 class="font-bold text-lg mb-2">Chamada nominal lenta</h3>
+          <p class="text-slate-400 text-sm">Chamar cada passageiro pelo nome ou conferir lista de papel atrasa a retomada da viagem.</p>
+        </div>
+        <div class="card p-6 fade-up delay-4">
+          <i class="fas fa-eye text-3xl accent-blue mb-4"></i>
+          <h3 class="font-bold text-lg mb-2">Atenção dividida</h3>
+          <p class="text-slate-400 text-sm">Motorista precisa olhar lista/tela em vez de manter os olhos na estrada e na porta do veículo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">02 / 11</div>
+  </section>
+
+  <!-- SLIDE 3: A SOLUÇÃO -->
+  <section class="slide" data-index="2">
+    <span class="brand-tag"><i class="fas fa-lightbulb"></i> A Solução</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-6">Câmera + Reconhecimento Facial + <span class="accent-green">Voz</span></h2>
+      <p class="fade-up delay-1 text-xl text-slate-300 max-w-3xl mb-12">
+        Um aplicativo web simples, aberto direto no navegador do celular/tablet do motorista — sem instalar nada — que
+        <strong class="text-white">reconhece cada passageiro pela câmera</strong> e
+        <strong class="text-white">fala em voz alta</strong> quantos estão a bordo ou quem está faltando.
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 fade-up delay-2">
+        <div class="card p-5 flex-1 flex items-center gap-4">
+          <i class="fas fa-camera text-2xl accent-blue"></i>
+          <span class="text-slate-200 font-medium">Câmera reconhece o rosto automaticamente</span>
+        </div>
+        <i class="fas fa-arrow-right accent-amber text-xl self-center hidden md:block"></i>
+        <div class="card p-5 flex-1 flex items-center gap-4">
+          <i class="fas fa-volume-high text-2xl accent-green"></i>
+          <span class="text-slate-200 font-medium">Sistema fala o resultado, sem precisar olhar a tela</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">03 / 11</div>
+  </section>
+
+  <!-- SLIDE 4: ETAPA 1 - EMBARQUE -->
+  <section class="slide" data-index="3">
+    <div class="step-line"></div>
+    <span class="brand-tag"><i class="fas fa-route"></i> Como funciona · Etapa 1 de 3</span>
+    <div class="max-w-5xl">
+      <div class="flex items-center gap-3 mb-4 fade-up">
+        <span class="w-10 h-10 rounded-full bg-amber-500 text-slate-900 font-bold flex items-center justify-center">1</span>
+        <h2 class="text-3xl font-extrabold">Embarque — cadastro facial</h2>
+      </div>
+      <p class="fade-up delay-1 text-slate-300 text-lg mb-8 max-w-3xl">
+        Ao criar a viagem, o motorista aponta a câmera para cada passageiro que sobe, digita o nome (e assento, opcional) e clica em <strong>"Cadastrar rosto"</strong>.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        <div class="card p-5 fade-up delay-2">
+          <i class="fas fa-camera-retro text-2xl accent-amber mb-3"></i>
+          <p class="text-sm text-slate-300">Captura o rosto e gera um <strong>código numérico único</strong> — não guarda foto em alta qualidade.</p>
+        </div>
+        <div class="card p-5 fade-up delay-3">
+          <i class="fas fa-user-plus text-2xl accent-amber mb-3"></i>
+          <p class="text-sm text-slate-300">Repete o processo para cada passageiro embarcado no ônibus.</p>
+        </div>
+        <div class="card p-5 fade-up delay-4">
+          <i class="fas fa-check-double text-2xl accent-amber mb-3"></i>
+          <p class="text-sm text-slate-300">Clica em <strong>"Concluir embarque"</strong> ao final da lista.</p>
+        </div>
+      </div>
+      <div class="fade-up delay-5 card p-5 border-amber-500/40 flex items-center gap-4">
+        <i class="fas fa-quote-left accent-amber text-xl"></i>
+        <p class="italic text-slate-200">"Embarque concluído. Foram confirmados 23 passageiros a bordo."</p>
+      </div>
+    </div>
+    <div class="slide-number">04 / 11</div>
+  </section>
+
+  <!-- SLIDE 5: ETAPA 2 - CONFERÊNCIA -->
+  <section class="slide" data-index="4">
+    <div class="step-line"></div>
+    <span class="brand-tag"><i class="fas fa-route"></i> Como funciona · Etapa 2 de 3</span>
+    <div class="max-w-5xl">
+      <div class="flex items-center gap-3 mb-4 fade-up">
+        <span class="w-10 h-10 rounded-full bg-emerald-500 text-slate-900 font-bold flex items-center justify-center">2</span>
+        <h2 class="text-3xl font-extrabold">Conferência em cada parada</h2>
+      </div>
+      <p class="fade-up delay-1 text-slate-300 text-lg mb-8 max-w-3xl">
+        Após uma parada (posto, restaurante), o motorista clica em <strong>"Iniciar conferência"</strong> e aponta a câmera
+        para os passageiros voltando ao ônibus — o reconhecimento é <strong>automático e contínuo</strong>.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="card p-6 border-green-500/40 fade-up delay-2">
+          <i class="fas fa-circle-check text-3xl accent-green mb-3"></i>
+          <h3 class="font-bold mb-2">Tudo certo</h3>
+          <p class="italic text-slate-300 text-sm">"Todos os 23 passageiros estão presentes. Pode seguir viagem."</p>
+        </div>
+        <div class="card p-6 border-red-500/40 fade-up delay-3">
+          <i class="fas fa-triangle-exclamation text-3xl accent-red mb-3"></i>
+          <h3 class="font-bold mb-2">Falta alguém</h3>
+          <p class="italic text-slate-300 text-sm">"Atenção! Está faltando o passageiro João Pereira."</p>
+        </div>
+      </div>
+      <p class="fade-up delay-4 text-slate-400 text-sm mt-6"><i class="fas fa-microphone-lines accent-green mr-2"></i>Cada rosto reconhecido também é confirmado em voz, um a um: <em>"Maria Silva confirmada"</em>.</p>
+    </div>
+    <div class="slide-number">05 / 11</div>
+  </section>
+
+  <!-- SLIDE 6: ETAPA 3 - ENCERRAR VIAGEM -->
+  <section class="slide" data-index="5">
+    <div class="step-line"></div>
+    <span class="brand-tag"><i class="fas fa-route"></i> Como funciona · Etapa 3 de 3</span>
+    <div class="max-w-5xl">
+      <div class="flex items-center gap-3 mb-4 fade-up">
+        <span class="w-10 h-10 rounded-full bg-sky-500 text-slate-900 font-bold flex items-center justify-center">3</span>
+        <h2 class="text-3xl font-extrabold">Encerrar viagem — privacidade dos dados</h2>
+      </div>
+      <p class="fade-up delay-1 text-slate-300 text-lg mb-8 max-w-3xl">
+        Ao final da viagem, o motorista clica em <strong>"Encerrar viagem"</strong>. Isso remove definitivamente os dados
+        biométricos de todos os passageiros daquela viagem.
+      </p>
+      <div class="flex flex-col md:flex-row gap-5">
+        <div class="card p-6 flex-1 fade-up delay-2">
+          <i class="fas fa-shield-halved text-3xl accent-blue mb-3"></i>
+          <h3 class="font-bold mb-2">Dados biométricos apagados</h3>
+          <p class="text-slate-400 text-sm">Rostos/descritores faciais são excluídos do banco de dados — não faz sentido guardar depois que a viagem termina.</p>
+        </div>
+        <div class="card p-6 flex-1 fade-up delay-3">
+          <i class="fas fa-clipboard-list text-3xl accent-blue mb-3"></i>
+          <h3 class="font-bold mb-2">Histórico preservado</h3>
+          <p class="text-slate-400 text-sm">Fica registrado quantos embarcaram, quantas paradas, se houve falta — para auditoria, sem os dados biométricos.</p>
+        </div>
+      </div>
+      <div class="fade-up delay-4 mt-6 text-sm text-slate-400 flex items-center gap-2">
+        <i class="fas fa-scale-balanced accent-amber"></i> Alinhado a boas práticas de privacidade (LGPD)
+      </div>
+    </div>
+    <div class="slide-number">06 / 11</div>
+  </section>
+
+  <!-- SLIDE 7: ANTES vs DEPOIS -->
+  <section class="slide" data-index="6">
+    <span class="brand-tag"><i class="fas fa-scale-unbalanced"></i> Comparativo</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-10">Antes <span class="text-slate-500">vs</span> <span class="accent-green">Depois</span></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-6 border-red-500/30 fade-up delay-1">
+          <div class="flex items-center gap-2 mb-4">
+            <i class="fas fa-clipboard-list accent-red"></i>
+            <h3 class="font-bold text-slate-300">Conferência manual (antes)</h3>
+          </div>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li class="flex gap-2"><i class="fas fa-xmark accent-red mt-1"></i>Chamada nominal ou lista de papel</li>
+            <li class="flex gap-2"><i class="fas fa-xmark accent-red mt-1"></i>Lenta, atrasa a retomada da viagem</li>
+            <li class="flex gap-2"><i class="fas fa-xmark accent-red mt-1"></i>Sujeita a erro humano / distração</li>
+            <li class="flex gap-2"><i class="fas fa-xmark accent-red mt-1"></i>Motorista precisa olhar para lista/tela</li>
+          </ul>
+        </div>
+        <div class="card p-6 border-green-500/40 fade-up delay-2">
+          <div class="flex items-center gap-2 mb-4">
+            <i class="fas fa-microphone-lines accent-green"></i>
+            <h3 class="font-bold text-white">Reconhecimento facial + voz (depois)</h3>
+          </div>
+          <ul class="space-y-3 text-sm text-slate-300">
+            <li class="flex gap-2"><i class="fas fa-check accent-green mt-1"></i>Reconhecimento automático pela câmera</li>
+            <li class="flex gap-2"><i class="fas fa-check accent-green mt-1"></i>Rápida, conferência em segundos</li>
+            <li class="flex gap-2"><i class="fas fa-check accent-green mt-1"></i>Alerta nominal exato de quem falta</li>
+            <li class="flex gap-2"><i class="fas fa-check accent-green mt-1"></i>Motorista mantém os olhos na estrada/porta</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">07 / 11</div>
+  </section>
+
+  <!-- SLIDE 8: TECNOLOGIA -->
+  <section class="slide" data-index="7">
+    <span class="brand-tag"><i class="fas fa-microchip"></i> Tecnologia</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-3">Simples, leve e <span class="accent-amber">sem instalação</span></h2>
+      <p class="fade-up delay-1 text-slate-300 text-lg mb-10 max-w-3xl">Funciona abrindo um link no navegador do celular/tablet do motorista.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="card p-5 flex items-start gap-4 fade-up delay-2">
+          <i class="fas fa-mobile-screen-button text-2xl accent-blue mt-1"></i>
+          <div>
+            <h3 class="font-bold mb-1">Aplicativo web</h3>
+            <p class="text-slate-400 text-sm">Roda direto no navegador — sem instalar app, sem loja de aplicativos.</p>
+          </div>
+        </div>
+        <div class="card p-5 flex items-start gap-4 fade-up delay-3">
+          <i class="fas fa-eye text-2xl accent-green mt-1"></i>
+          <div>
+            <h3 class="font-bold mb-1">Reconhecimento no próprio celular</h3>
+            <p class="text-slate-400 text-sm">O rosto é processado ali mesmo, no navegador — nada é enviado a servidores externos.</p>
+          </div>
+        </div>
+        <div class="card p-5 flex items-start gap-4 fade-up delay-4">
+          <i class="fas fa-database text-2xl accent-amber mt-1"></i>
+          <div>
+            <h3 class="font-bold mb-1">Banco de dados leve</h3>
+            <p class="text-slate-400 text-sm">Guarda só nome, assento e um "código numérico" do rosto — não fotos em alta resolução.</p>
+          </div>
+        </div>
+        <div class="card p-5 flex items-start gap-4 fade-up delay-5">
+          <i class="fas fa-server text-2xl accent-blue mt-1"></i>
+          <div>
+            <h3 class="font-bold mb-1">Infraestrutura de borda</h3>
+            <p class="text-slate-400 text-sm">Hospedagem rápida e de baixo custo, distribuída globalmente (Cloudflare).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">08 / 11</div>
+  </section>
+
+  <!-- SLIDE 9: BENEFÍCIOS -->
+  <section class="slide" data-index="8">
+    <span class="brand-tag"><i class="fas fa-star"></i> Vantagens</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-10">Por que isso importa para a viação</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="card p-5 fade-up delay-1"><i class="fas fa-ear-listen text-2xl accent-green mb-3"></i><p class="text-sm text-slate-300">Motorista ouve o resultado — não precisa desviar atenção da direção/porta</p></div>
+        <div class="card p-5 fade-up delay-2"><i class="fas fa-user-shield text-2xl accent-amber mb-3"></i><p class="text-sm text-slate-300">Reduz risco de esquecer passageiro numa parada</p></div>
+        <div class="card p-5 fade-up delay-3"><i class="fas fa-bolt text-2xl accent-blue mb-3"></i><p class="text-sm text-slate-300">Conferência automática, rápida — sem chamada nominal manual</p></div>
+        <div class="card p-5 fade-up delay-4"><i class="fas fa-lock text-2xl accent-green mb-3"></i><p class="text-sm text-slate-300">Dados biométricos apagados automaticamente ao final da viagem</p></div>
+        <div class="card p-5 fade-up delay-5"><i class="fas fa-coins text-2xl accent-amber mb-3"></i><p class="text-sm text-slate-300">Infraestrutura leve, baixo custo de manutenção</p></div>
+        <div class="card p-5 fade-up delay-5"><i class="fas fa-tablet-screen-button text-2xl accent-blue mb-3"></i><p class="text-sm text-slate-300">Só precisa da câmera do próprio celular/tablet — sem hardware especial</p></div>
+      </div>
+    </div>
+    <div class="slide-number">09 / 11</div>
+  </section>
+
+  <!-- SLIDE 10: LIMITAÇÕES + ROADMAP -->
+  <section class="slide" data-index="9">
+    <span class="brand-tag"><i class="fas fa-map"></i> Estado atual & Próximos passos</span>
+    <div class="max-w-5xl">
+      <h2 class="fade-up text-4xl font-extrabold mb-8">É um <span class="accent-amber">protótipo</span> — com evolução planejada</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="fade-up delay-1">
+          <h3 class="font-bold text-slate-300 mb-3 flex items-center gap-2"><i class="fas fa-flask accent-amber"></i>Limitações atuais</h3>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-amber"></i>Sensível a luz, ângulo e óculos escuros</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-amber"></i>Sem login/autenticação do motorista ainda</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-amber"></i>Sem modo offline (sinal fraco na rodovia)</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-amber"></i>Cadastra apenas 1 ângulo de rosto por pessoa</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-amber"></i>Sem confirmação manual de reserva</li>
+          </ul>
+        </div>
+        <div class="fade-up delay-2">
+          <h3 class="font-bold text-slate-300 mb-3 flex items-center gap-2"><i class="fas fa-rocket accent-green"></i>Roadmap sugerido</h3>
+          <ul class="space-y-2 text-sm text-slate-300">
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Múltiplos ângulos de rosto no cadastro</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Confirmação manual como alternativa</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Tela de consentimento (LGPD)</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Login do motorista</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Modo offline com sincronização</li>
+            <li class="flex gap-2"><i class="fas fa-circle text-[6px] mt-2 accent-green"></i>Histórico por parada + alerta sonoro</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">10 / 11</div>
+  </section>
+
+  <!-- SLIDE 11: ENCERRAMENTO -->
+  <section class="slide" data-index="10">
+    <span class="brand-tag"><i class="fas fa-flag-checkered"></i> Conclusão</span>
+    <div class="flex flex-col items-start justify-center h-full max-w-4xl">
+      <h2 class="fade-up text-5xl font-extrabold mb-6">Vamos testar o <span class="accent-amber">protótipo</span>?</h2>
+      <p class="fade-up delay-1 text-xl text-slate-300 max-w-2xl mb-10">
+        Uma solução simples, de baixo custo, que ajuda motoristas a conferir passageiros com mais segurança e agilidade —
+        sem tirar os olhos da estrada.
+      </p>
+      <div class="fade-up delay-2 flex flex-wrap gap-3">
+        <span class="px-4 py-2 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-sm"><i class="fas fa-camera mr-2"></i>Reconhecimento facial</span>
+        <span class="px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-sm"><i class="fas fa-microphone-lines mr-2"></i>Confirmação por voz</span>
+        <span class="px-4 py-2 rounded-full bg-sky-500/15 border border-sky-500/40 text-sky-300 text-sm"><i class="fas fa-shield-halved mr-2"></i>Privacidade por padrão</span>
+      </div>
+      <p class="fade-up delay-3 text-slate-500 text-sm mt-14">Obrigado! Dúvidas e sugestões são bem-vindas.</p>
+    </div>
+    <div class="slide-number">11 / 11</div>
+  </section>
+
+</div>
+
+<div id="nav-controls">
+  <button class="nav-btn" id="btn-prev" title="Anterior (seta esquerda)"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="btn-next" title="Próximo (seta direita)"><i class="fas fa-chevron-right"></i></button>
+  <button class="nav-btn" id="btn-fullscreen" title="Tela cheia"><i class="fas fa-expand"></i></button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsContainer = document.getElementById('dots');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+  const dots = Array.from(dotsContainer.children);
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    // re-trigger fade-up animations
+    slides[current].querySelectorAll('.fade-up').forEach(el => {
+      el.style.animation = 'none';
+      requestAnimationFrame(() => { el.style.animation = ''; });
+    });
+  }
+
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('btn-fullscreen').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  let touchStartX = 0;
+  window.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+  window.addEventListener('touchend', e => {
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (diff > 50) goTo(current - 1);
+    if (diff < -50) goTo(current + 1);
+  });
+</script>
+</body>
+</html>

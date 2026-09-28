@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+#video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #000;
+}
+#video, #overlay {
+  width: 100%;
+  display: block;
+}
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.scan-flash {
+  animation: flash 0.4s ease-out;
+}
+@keyframes flash {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.9); }
+  100% { box-shadow: 0 0 0 20px rgba(34,197,94,0); }
+}
+.pulse-rec {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.passenger-card {
+  transition: all 0.2s ease;
+}
+.passenger-card.presente {
+  background-color: rgba(34,197,94,0.15) !important;
+  border-color: rgba(34,197,94,0.5) !important;
+}
+.passenger-card.faltando {
+  background-color: rgba(239,68,68,0.15) !important;
+  border-color: rgba(239,68,68,0.5) !important;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }

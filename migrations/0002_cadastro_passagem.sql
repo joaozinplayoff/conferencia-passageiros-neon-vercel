@@ -1,0 +1,2 @@
+-- Mantido como migration vazia para preservar a sequência original.
+-- O campo documento já faz parte do schema inicial PostgreSQL/Neon.
